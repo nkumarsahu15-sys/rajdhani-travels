@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  :focus-visible {
+    outline: 2px solid #f4a300;
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: #f4a300;
+    color: #0a1a2f;
+  }
+}
+
+@layer components {
+  /* Dot-matrix overlay that gives the destination board its LED look */
+  .led-dots {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.6) 1px, transparent 1.3px);
+    background-size: 4px 4px;
+  }
+  .board-glow {
+    text-shadow: 0 0 14px rgba(244, 163, 0, 0.55);
+  }
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+  .section-y {
+    @apply py-20 sm:py-24 lg:py-32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
