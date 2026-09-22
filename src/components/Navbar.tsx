@@ -32,18 +32,14 @@ export function Navbar() {
 
   useEffect(() => {
     if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     document.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = previous;
-      document.removeEventListener('keydown', onKey);
-    };
+    return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
   return (
-    <header
+    <>
+      <header
       className={cn(
         'sticky top-0 z-50 border-b bg-night/85 backdrop-blur-xl transition duration-300',
         scrolled ? 'border-white/10 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.8)]' : 'border-transparent',
@@ -84,7 +80,7 @@ export function Navbar() {
           </div>
           <button
             type="button"
-            className="relative grid h-11 w-11 place-items-center rounded-full border border-white/15 xl:hidden"
+            className="relative z-[70] grid h-11 w-11 place-items-center rounded-full border border-white/15 touch-manipulation xl:hidden"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -98,12 +94,13 @@ export function Navbar() {
           </button>
         </div>
       </nav>
+    </header>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="mobile-menu"
-            className="fixed inset-x-0 bottom-0 top-[72px] z-40 overflow-y-auto bg-night xl:hidden"
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          id="mobile-menu"
+          className="fixed inset-x-0 bottom-0 top-[72px] z-[65] min-h-0 overflow-y-auto overscroll-contain bg-night [touch-action:pan-y] xl:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -150,9 +147,9 @@ export function Navbar() {
                 </Button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }

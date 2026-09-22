@@ -24,7 +24,7 @@ export const siteConfig = {
     'Rajdhani Travels provides comfortable and reliable transportation solutions for individuals, families, groups, tourists, businesses, weddings, events and all types of travel requirements.',
   seoDescription:
     'Rajdhani Travels - Sleeper & Seater Buses and Car Rental Services in Naubasta, Kanpur, Uttar Pradesh. Comfortable Journey. Reliable Service.',
-  url: process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
 
   phones: {
     booking: {

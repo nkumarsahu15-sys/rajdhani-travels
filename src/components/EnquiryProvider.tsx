@@ -40,15 +40,33 @@ export function EnquiryProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+
+    // Use a fixed-body lock instead of `overflow: hidden`. This is more
+    // reliable on mobile browsers while still allowing the dialog itself
+    // to receive vertical touch scrolling.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    };
+
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.width = '100%';
+
     dialogRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeEnquiry();
     };
     document.addEventListener('keydown', onKey);
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.width = previous.width;
+      window.scrollTo(0, scrollY);
       document.removeEventListener('keydown', onKey);
     };
   }, [open, closeEnquiry]);
@@ -76,7 +94,7 @@ export function EnquiryProvider({ children }: { children: ReactNode }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-6"
+            className="fixed inset-0 z-[60] flex items-end justify-center overflow-hidden sm:items-center sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -90,7 +108,7 @@ export function EnquiryProvider({ children }: { children: ReactNode }) {
               aria-labelledby="enquiry-title"
               tabIndex={-1}
               onKeyDown={trapFocus}
-              className="relative max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl bg-white p-6 shadow-lift focus:outline-none sm:max-w-2xl sm:rounded-3xl sm:p-9"
+              className="relative min-h-0 max-h-[92dvh] w-full touch-pan-y overflow-y-auto overscroll-contain rounded-t-3xl bg-white p-6 shadow-lift [scrollbar-gutter:stable] [-webkit-overflow-scrolling:touch] focus:outline-none sm:max-w-2xl sm:rounded-3xl sm:p-9"
               initial={{ opacity: 0, y: 36 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
